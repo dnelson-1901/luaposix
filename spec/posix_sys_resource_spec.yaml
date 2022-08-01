@@ -74,14 +74,13 @@ specify posix.sys.resource:
          }
       }
   - it accepts PosixRlimit argument: |
-      for _, rc in pairs {"RLIMIT_CORE", "RLIMIT_CPU", "RLIMIT_DATA", "RLIMIT_FSIZE",
+      for _, rc in pairs {"RLIMIT_CORE", "RLIMIT_CPU", "RLIMIT_DATA",
+          --[["RLIMIT_FSIZE", -- doesn't work on Ubuntu!]]
           "RLIMIT_NOFILE", "RLIMIT_STACK", "RLIMIT_AS"}
       do
          rlim = getrlimit(M[rc])
-         if false then
-            expect({setrlimit(M[rc], rlim)}).to_equal.any_of {
-              {0},
-              {nil, "setrlimit: Operation not permitted", 1},
-            }
-         end
+         expect({setrlimit(M[rc], rlim)}).to_equal.any_of {
+           {0},
+           {nil, "setrlimit: Operation not permitted", 1},
+         }
       end
